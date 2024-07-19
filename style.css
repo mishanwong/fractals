@@ -9,7 +9,7 @@ canvas {
   margin-top: 20px;
 }
 
-#levels {
+#levelsControlContainer {
   display: none;
 }
 #level {
@@ -32,4 +32,7 @@ canvas {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+#fernControlContainer {
+  display: none;
 }

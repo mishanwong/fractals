@@ -1,9 +1,11 @@
 const canvas = document.getElementById("fractal");
 const ctx = canvas.getContext("2d");
-const corridor = document.getElementById("infiniteCorridor");
 
+const corridor = document.getElementById("infiniteCorridor");
 const triangle = document.getElementById("sierpinskiTriangle");
 const tree = document.getElementById("binaryTree");
+const fern = document.getElementById("barnsleyFern");
+
 const header = document.getElementById("header");
 const levelDisplay = document.getElementById("level");
 const addLevelButton = document.getElementById("addLevel");
@@ -12,14 +14,18 @@ const angleDisplay = document.getElementById("angle");
 
 const sliderContainer = document.getElementById("sliderContainer");
 const slider = document.getElementById("slider");
+const fernControlContainer = document.getElementById("fernControlContainer");
+const levelsControlDiv = document.getElementById("levelsControlContainer");
+
+const playButton = document.getElementById("playButton");
 
 let level = 0;
 let selected = "";
-let angle = 45;
+let angle = 60;
 
 const maxLevel = {
-  infiniteCorridor: 20,
-  sierpinskiTriangle: 8,
+  infiniteCorridor: 30,
+  sierpinskiTriangle: 10,
   binaryTree: 15,
 };
 
@@ -27,7 +33,7 @@ corridor.addEventListener("click", () => {
   header.innerText = "Infinite Corridor";
   selected = "infiniteCorridor";
   reset();
-  displayLevelsDiv();
+  displayControlsDiv();
   ctx.strokeStyle = getRandomColor();
 });
 
@@ -35,7 +41,7 @@ triangle.addEventListener("click", () => {
   header.innerText = "Sierpinski Triangle";
   selected = "sierpinskiTriangle";
   reset();
-  displayLevelsDiv();
+  displayControlsDiv();
   ctx.strokeStyle = getRandomColor();
 });
 
@@ -43,8 +49,15 @@ tree.addEventListener("click", () => {
   header.innerText = "Binary Tree";
   selected = "binaryTree";
   reset();
-  displayLevelsDiv();
+  displayControlsDiv();
   ctx.strokeStyle = getRandomColor();
+});
+
+fern.addEventListener("click", () => {
+  header.innerText = "Barnsley Fern";
+  selected = "barnsleyFern";
+  displayControlsDiv();
+  reset();
 });
 
 slider.addEventListener("input", (e) => {
@@ -53,22 +66,32 @@ slider.addEventListener("input", (e) => {
   draw();
 });
 
-const displayLevelsDiv = () => {
-  const levelsDiv = document.getElementById("levels");
-  if (!levelsDiv.style.display) {
-    levelsDiv.style.display = "block";
+const displayControlsDiv = () => {
+  if (selected === "infiniteCorridor" || selected === "sierpinskiTriangle") {
+    showContainer(levelsControlDiv);
+    levelDisplay.innerText = level;
+    hideContainer(sliderContainer);
+    hideContainer(fernControlContainer);
+  } else if (selected === "binaryTree") {
+    showContainer(levelsControlDiv);
+    showContainer(sliderContainer);
+    hideContainer(fernControlContainer);
+  } else if (selected === "barnsleyFern") {
+    showContainer(fernControlContainer);
+    hideContainer(levelsControlDiv);
+    hideContainer(sliderContainer);
   }
-  levelDisplay.innerText = level;
+};
 
-  if (selected === "binaryTree") {
-    if (
-      !sliderContainer.style.display ||
-      sliderContainer.style.display === "none"
-    ) {
-      sliderContainer.style.display = "block";
-    }
-  } else {
-    sliderContainer.style.display = "none";
+const hideContainer = (container) => {
+  if (container) {
+    container.style.display = "none";
+  }
+};
+
+const showContainer = (container) => {
+  if (container) {
+    container.style.display = "block";
   }
 };
 
@@ -97,8 +120,12 @@ const draw = () => {
     drawSierpinskiTriangle(level);
   } else if (selected === "binaryTree") {
     drawBinaryTree(level);
+  } else if (selected === "barnsleyFern") {
+    drawBarnsleyFern(level);
   }
 };
+
+playButton.addEventListener("click", draw);
 const drawInfiniteCorridor = (level) => {
   const centerX = ctx.canvas.width / 2;
   const centerY = ctx.canvas.height / 2;
@@ -128,7 +155,6 @@ const _drawInfiniteCorridor = (ctx, level, centerX, centerY, width, height) => {
 };
 
 const drawSierpinskiTriangle = (level) => {
-  // const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   _drawSierpinskiTriangle(
@@ -164,8 +190,6 @@ const _drawSierpinskiTriangle = (ctx, level, X, Y, width, height) => {
 };
 
 const drawBinaryTree = (level) => {
-  // const ctx = canvas.getContext("2d");
-
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   _drawBinaryTree(
@@ -186,6 +210,7 @@ const _drawBinaryTree = (ctx, level, startX, startY, endX, endY) => {
   ctx.stroke();
 
   const R = 1 / Math.sqrt(2);
+  // const R = 2 / (1 + Math.sqrt(5));
 
   const theta = (Math.PI * angle) / 180;
   const newStartX = endX;
@@ -206,10 +231,51 @@ const _drawBinaryTree = (ctx, level, startX, startY, endX, endY) => {
   _drawBinaryTree(ctx, level - 1, newStartX, newStartY, leftEndX, leftEndY);
 };
 
+const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const drawBarnsleyFern = async (level) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx.fillStyle = "rgb(0 128 0)";
+  let x0 = 0;
+  let y0 = 0;
+  for (let i = 0; i < 100000; i++) {
+    ctx.beginPath();
+    ctx.arc(
+      x0 * 100 + ctx.canvas.width / 2,
+      ctx.canvas.height - y0 * 75,
+      1,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+
+    const rand = Math.random();
+    let x1, y1;
+    if (rand <= 0.01) {
+      x1 = 0;
+      y1 = 0.16 * y0;
+    } else if (rand <= 0.86) {
+      x1 = 0.85 * x0 + 0.04 * y0;
+      y1 = -0.04 * x0 + 0.85 * y0 + 1.6;
+    } else if (rand <= 0.93) {
+      x1 = 0.2 * x0 - 0.26 * y0;
+      y1 = 0.23 * x0 + 0.22 * y0 + 1.6;
+    } else {
+      x1 = -0.15 * x0 + 0.28 * y0;
+      y1 = 0.26 * x0 + 0.24 * y0 + 0.44;
+    }
+    x0 = x1;
+    y0 = y1;
+
+    if (i % 100 === 0) {
+      await sleep(0.0001);
+    }
+  }
+};
 const getRandomColor = () => {
   const r = Math.floor(Math.random() * 255);
   const g = Math.floor(Math.random() * 255);
   const b = Math.floor(Math.random() * 255);
 
-  return `rgb(${r} ${b} ${b})`;
+  return `rgb(${r} ${g} ${b})`;
 };
