@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Fractals</title>
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+  </head>
+  <body>
+    <h1>Fractals</h1>
+    <div>
+      <button id="infiniteCorridor">Infinite Corridor</button>
+      <button id="sierpinskiTriangle">Sierpinski Triangle</button>
+      <button id="binaryTree">Binary Tree</button>
+    </div>
+    <h2 id="header"></h2>
+    <div id="levels">
+      <div id="buttonRow">
+        <button id="addLevel">Add Level</button>
+        <h3 id="level"></h3>
+        <button id="removeLevel">Remove Level</button>
+      </div>
+      <div
+        id="sliderContainer"
+        class="sliderContainer"
+      >
+        <div id="centeringContainer">
+          <p id="angle">Angle: 60 degrees</p>
+          <input
+            type="range"
+            min="0"
+            max="180"
+            value="60"
+            id="slider"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <canvas
+        id="fractal"
+        width="800"
+        height="800"
+      ></canvas>
+    </div>
+
+    <script src="drawPolygon.js"></script>
+  </body>
+</html>

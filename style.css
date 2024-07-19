@@ -1,0 +1,35 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+canvas {
+  border: 1px solid black;
+  margin-top: 20px;
+}
+
+#levels {
+  display: none;
+}
+#level {
+  margin: 0 20px;
+}
+#buttonRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+#slideContainer {
+  display: none;
+}
+
+#centeringContainer {
+  margin-top: 10px;
+  padding-bottom: 10px;
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
