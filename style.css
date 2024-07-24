@@ -36,3 +36,7 @@ canvas {
 #fernControlContainer {
   display: none;
 }
+
+#mandelbrotJuliaContainer {
+  display: flex;
+}
