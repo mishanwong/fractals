@@ -6,26 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <link
-      rel="stylesheet"
-      href="style.css"
-    />
     <title>Mandelbrot Set</title>
   </head>
-  <body>
-    <h1>Mandelbrot Set</h1>
-    <div id="mandelbrotJuliaContainer">
-      <div>
-        <canvas id="mandelbrot"> </canvas>
-        <p id="coordinatesDisplay"></p>
-      </div>
-      <div>
-        <canvas id="julia"></canvas>
-      </div>
-    </div>
-    <script
-      type="text/javascript"
-      src="mandelbrot.js"
-    ></script>
+  <body id="mandelbrotBody">
+    <canvas id="mandelbrotFullScreen"></canvas>
+    <script src="mandelbrot.js"></script>
   </body>
 </html>
